@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="250.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="morpion.controller.quitterController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="250.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="morpion.controller.quitterController">
    <children>
       <ImageView fitHeight="265.0" fitWidth="408.0" pickOnBounds="true" preserveRatio="true" x="-4.0" y="-4.0">
          <image>
@@ -23,9 +23,8 @@
                   <Font name="System Bold" size="25.0" />
                </font>
             </Label>
-            <HBox prefHeight="175.0" prefWidth="200.0">
+            <HBox alignment="CENTER" prefHeight="175.0" prefWidth="200.0" spacing="50.0">
                <children>
-                  <Pane prefWidth="50.0" />
                   <Pane prefWidth="125.0">
                      <children>
                         <ImageView fitHeight="126.0" fitWidth="126.0" pickOnBounds="true" preserveRatio="true">
@@ -33,14 +32,13 @@
                               <Image url="@../image/rester.png" />
                            </image>
                         </ImageView>
-                        <Button alignment="BOTTOM_CENTER" mnemonicParsing="false" onAction="#Stay" prefHeight="175.0" prefWidth="126.0" style="-fx-background-color: transparent;" text="NON" textAlignment="CENTER" textFill="WHITE">
+                        <Button alignment="BOTTOM_CENTER" mnemonicParsing="false" onAction="#stay" prefHeight="175.0" prefWidth="126.0" style="-fx-background-color: transparent;" text="NON" textAlignment="CENTER" textFill="WHITE">
                            <font>
                               <Font name="System Bold" size="25.0" />
                            </font>
                         </Button>
                      </children>
                   </Pane>
-                  <Pane prefWidth="50.0" />
                   <Pane prefWidth="125.0">
                      <children>
                         <ImageView fitHeight="133.0" fitWidth="126.0" pickOnBounds="true" preserveRatio="true">
@@ -48,14 +46,13 @@
                               <Image url="@../image/quitter.png" />
                            </image>
                         </ImageView>
-                        <Button alignment="BOTTOM_CENTER" mnemonicParsing="false" onAction="#Leave" prefHeight="175.0" prefWidth="126.0" style="-fx-background-color: transparent;" text="OUI" textAlignment="CENTER" textFill="WHITE">
+                        <Button alignment="BOTTOM_CENTER" mnemonicParsing="false" onAction="#leave" prefHeight="175.0" prefWidth="126.0" style="-fx-background-color: transparent;" text="OUI" textAlignment="CENTER" textFill="WHITE">
                            <font>
                               <Font name="System Bold" size="25.0" />
                            </font>
                         </Button>
                      </children>
                   </Pane>
-                  <Pane prefWidth="50.0" />
                </children>
             </HBox>
          </children>

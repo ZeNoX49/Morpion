@@ -64,7 +64,7 @@ public class  morpionController {
     public morpionController() {
     }
 
-    public void initialize() throws InterruptedException {
+    public void initialize() {
         nbTour = 0;
         Label_Resultat.setText("");
 
@@ -124,14 +124,14 @@ public class  morpionController {
     public boolean isIALevelNormal() { return IALevelNormal; }
 
     @FXML
-    void cliqued(ActionEvent event) throws InterruptedException {
+    void cliqued(ActionEvent event) {
         if (joueurActuel.equals(joueur1) || !isPlayingAlone()) {
             Button button = (Button) event.getSource();
             jouer(button);
         }
     }
 
-    private void jouer(Button button) throws InterruptedException {
+    private void jouer(Button button) {
         buttonOfPlayer.get(joueurActuel).add(button);
         button.setDisable(true);
 
@@ -153,7 +153,7 @@ public class  morpionController {
         changePlayer();
     }
 
-    private void changePlayer() throws InterruptedException {
+    private void changePlayer() {
         joueurActuel = joueurActuel.equals(joueur1) ? joueur2 : joueur1;
         Player_Turn.setText(joueurActuel.getNom());
     }
@@ -310,7 +310,7 @@ public class  morpionController {
         Label_Resultat.setText("Victoire de " + joueurActuel.getNom());
     }
 
-    public void resetGame(int time) throws InterruptedException {
+    public void resetGame(int time) {
         nbTour = 0;
 
         PauseTransition pause = new PauseTransition(Duration.seconds(time));
@@ -339,7 +339,7 @@ public class  morpionController {
         pause.play();
     }
 
-    public void finDePartie() throws InterruptedException {
+    public void finDePartie() {
         nbTour++;
 
         if (partieGagnee()) {
@@ -375,17 +375,17 @@ public class  morpionController {
     }
 
     @FXML
-    void MB_Leave(ActionEvent event) throws IOException {
+    void MB_Leave(ActionEvent event) {
         Morpion.launchQuitter();
     }
 
     @FXML
-    void MB_Parameter(ActionEvent event) throws IOException {
+    void MB_Parameter(ActionEvent event) {
         Morpion.launchParametre();
     }
 
     @FXML
-    void MB_Reset(ActionEvent event) throws InterruptedException {
+    void MB_Reset(ActionEvent event) {
         resetGame(0);
         Player1_Score.setText("0");
         Player2_Score.setText("0");
@@ -394,7 +394,7 @@ public class  morpionController {
     }
 
     @FXML
-    void MB_Rules(ActionEvent event) throws IOException {
+    void MB_Rules(ActionEvent event) {
         Morpion.launchRegle();
     }
 

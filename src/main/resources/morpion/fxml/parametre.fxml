@@ -16,7 +16,7 @@
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1067.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="morpion.controller.parametreController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1067.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="morpion.controller.parametreController">
    <children>
       <ImageView fitHeight="600.0" fitWidth="1067.0" pickOnBounds="true" preserveRatio="true">
          <image>
@@ -25,12 +25,12 @@
       </ImageView>
       <MenuBar prefHeight="26.0" prefWidth="1067.0">
          <menus>
-            <Menu mnemonicParsing="false" onAction="#MB_Rules" text="Règles du jeu">
+            <Menu mnemonicParsing="false" onAction="#openRulesWindow" text="Règles du jeu">
                <items>
                   <MenuItem mnemonicParsing="false" text="Règles du jeu" />
                </items>
             </Menu>
-            <Menu mnemonicParsing="false" onAction="#MB_Leave" text="Quitter">
+            <Menu mnemonicParsing="false" onAction="#openLeaveWindow" text="Quitter">
                <items>
                   <MenuItem mnemonicParsing="false" text="Quitter" />
                </items>

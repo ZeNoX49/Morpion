@@ -9,12 +9,12 @@ import javafx.stage.Stage;
 public class quitterController {
 
     @FXML
-    void Leave(ActionEvent event) {
+    void leave(ActionEvent event) {
         Platform.exit(); // Ferme toute l'application
     }
 
     @FXML
-    void Stay(ActionEvent event) {
+    void stay(ActionEvent event) {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.close();
     }
