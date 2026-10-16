@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
@@ -16,7 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1067.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="morpion.controller.morpionController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1067.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="morpion.controller.morpionController">
    <children>
       <ImageView fitHeight="600.0" fitWidth="1067.0" pickOnBounds="true" preserveRatio="true">
          <image>
@@ -27,22 +26,22 @@
          <children>
             <MenuBar prefHeight="26.0" prefWidth="1075.0">
                <menus>
-                  <Menu mnemonicParsing="false" onAction="#MB_Parameter" text="Modifier les paramètres de la partie">
+                  <Menu mnemonicParsing="false" onAction="#openParameterWindow" text="Modifier les paramètres de la partie">
                      <items>
                         <MenuItem mnemonicParsing="false" text="Modifier les paramètres de la partie" />
                      </items>
                   </Menu>
-                  <Menu mnemonicParsing="false" onAction="#MB_Reset" text="Réinitialiser la partie">
+                  <Menu mnemonicParsing="false" onAction="#resetGame" text="Réinitialiser la partie">
                      <items>
                         <MenuItem mnemonicParsing="false" text="Réinitialiser la partie" />
                      </items>
                   </Menu>
-                  <Menu mnemonicParsing="false" onAction="#MB_Rules" text="Règles du jeu">
+                  <Menu mnemonicParsing="false" onAction="#openRulesWindow" text="Règles du jeu">
                      <items>
                         <MenuItem mnemonicParsing="false" text="Règles du jeu" />
                      </items>
                   </Menu>
-                  <Menu mnemonicParsing="false" onAction="#MB_Leave" text="Quitter">
+                  <Menu mnemonicParsing="false" onAction="#openLeaveWindow" text="Quitter">
                      <items>
                         <MenuItem mnemonicParsing="false" text="Quitter" />
                      </items>
@@ -56,12 +55,12 @@
                         <Pane prefHeight="200.0" prefWidth="183.5" />
                         <Pane prefHeight="200.0" prefWidth="250.0">
                            <children>
-                              <Label fx:id="Player1_TextScore" alignment="CENTER" layoutY="10.0" prefHeight="36.0" prefWidth="250.0" text="Score Joueur 1" textFill="WHITE">
+                              <Label fx:id="player1TextScore" alignment="CENTER" layoutY="10.0" prefHeight="36.0" prefWidth="250.0" text="Score Joueur 1" textFill="WHITE">
                                  <font>
                                     <Font name="System Bold" size="25.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="Player1_Score" alignment="CENTER" layoutY="45.0" prefHeight="36.0" prefWidth="250.0" text="0" textFill="WHITE">
+                              <Label fx:id="player1Score" alignment="CENTER" layoutY="45.0" prefHeight="36.0" prefWidth="250.0" text="0" textFill="WHITE">
                                  <font>
                                     <Font name="System Bold" size="25.0" />
                                  </font>
@@ -76,7 +75,7 @@
                                     <Font name="System Bold" size="25.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="Player_Turn" alignment="CENTER" layoutY="45.0" prefHeight="36.0" prefWidth="150.0" text="Joueur 1" textFill="WHITE">
+                              <Label fx:id="playerTurn" alignment="CENTER" layoutY="45.0" prefHeight="36.0" prefWidth="150.0" text="Joueur 1" textFill="WHITE">
                                  <font>
                                     <Font name="System Bold" size="25.0" />
                                  </font>
@@ -86,12 +85,12 @@
                         <Pane prefHeight="200.0" prefWidth="25.0" />
                         <Pane prefHeight="200.0" prefWidth="250.0">
                            <children>
-                              <Label fx:id="Player2_TextScore" alignment="CENTER" layoutY="10.0" prefHeight="36.0" prefWidth="250.0" text="Score Joueur 2" textFill="WHITE">
+                              <Label fx:id="player2TextScore" alignment="CENTER" layoutY="10.0" prefHeight="36.0" prefWidth="250.0" text="Score Joueur 2" textFill="WHITE">
                                  <font>
                                     <Font name="System Bold" size="25.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="Player2_Score" alignment="CENTER" layoutY="45.0" prefHeight="36.0" prefWidth="250.0" text="0" textFill="WHITE">
+                              <Label fx:id="player2Score" alignment="CENTER" layoutY="45.0" prefHeight="36.0" prefWidth="250.0" text="0" textFill="WHITE">
                                  <font>
                                     <Font name="System Bold" size="25.0" />
                                  </font>
@@ -111,7 +110,7 @@
                <bottom>
                   <Pane prefHeight="50.0" prefWidth="1067.0" BorderPane.alignment="CENTER">
                      <children>
-                        <Label fx:id="Label_Resultat" alignment="CENTER" prefHeight="50.0" prefWidth="1067.0" textFill="WHITE">
+                        <Label fx:id="labelResultat" alignment="CENTER" prefHeight="50.0" prefWidth="1067.0" textFill="WHITE">
                            <font>
                               <Font size="30.0" />
                            </font>
@@ -137,55 +136,46 @@
                               <Image url="@../image/planete/planete_button0.png" />
                            </image>
                         </ImageView>
-                        <Button fx:id="button0" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onAction="#cliqued" prefHeight="150.0" prefWidth="150.0" style="-fx-background-color: transparent;" />
                         <ImageView fx:id="image1" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1">
                            <image>
                               <Image url="@../image/planete/planete_button1.png" />
                            </image>
                         </ImageView>
-                        <Button fx:id="button1" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onAction="#cliqued" prefHeight="150.0" prefWidth="150.0" style="-fx-background-color: transparent;" GridPane.columnIndex="1" />
                         <ImageView fx:id="image2" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2">
                            <image>
                               <Image url="@../image/planete/planete_button2.png" />
                            </image>
                         </ImageView>
-                        <Button fx:id="button2" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onAction="#cliqued" prefHeight="150.0" prefWidth="150.0" style="-fx-background-color: transparent;" GridPane.columnIndex="2" />
                         <ImageView fx:id="image3" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="1">
                            <image>
                               <Image url="@../image/planete/planete_button3.png" />
                            </image>
                         </ImageView>
-                        <Button fx:id="button3" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onAction="#cliqued" prefHeight="150.0" prefWidth="150.0" style="-fx-background-color: transparent;" GridPane.rowIndex="1" />
                         <ImageView fx:id="image4" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="1">
                            <image>
                               <Image url="@../image/planete/planete_button4.png" />
                            </image>
                         </ImageView>
-                        <Button fx:id="button4" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onAction="#cliqued" prefHeight="150.0" prefWidth="150.0" style="-fx-background-color: transparent;" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <ImageView fx:id="image5" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.rowIndex="1">
                            <image>
                               <Image url="@../image/planete/planete_button5.png" />
                            </image>
                         </ImageView>
-                        <Button fx:id="button5" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onAction="#cliqued" prefHeight="150.0" prefWidth="150.0" style="-fx-background-color: transparent;" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                         <ImageView fx:id="image6" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="2">
                            <image>
                               <Image url="@../image/planete/planete_button6.png" />
                            </image>
                         </ImageView>
-                        <Button fx:id="button6" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onAction="#cliqued" prefHeight="150.0" prefWidth="150.0" style="-fx-background-color: transparent;" GridPane.rowIndex="2" />
                         <ImageView fx:id="image7" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="2">
                            <image>
                               <Image url="@../image/planete/planete_button7.png" />
                            </image>
                         </ImageView>
-                        <Button fx:id="button7" mnemonicParsing="false" onAction="#cliqued" prefHeight="150.0" prefWidth="150.0" style="-fx-background-color: transparent;" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                         <ImageView fx:id="image8" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.rowIndex="2">
                            <image>
                               <Image url="@../image/planete/planete_button8.png" />
                            </image>
                         </ImageView>
-                        <Button fx:id="button8" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onAction="#cliqued" prefHeight="150.0" prefWidth="150.0" style="-fx-background-color: transparent;" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                      </children>
                   </GridPane>
                </center>

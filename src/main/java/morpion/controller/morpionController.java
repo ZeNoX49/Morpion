@@ -9,393 +9,296 @@ import javafx.animation.PauseTransition;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
-
-import morpion.Joueur;
 import morpion.Morpion;
+import morpion.player.APlayer;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
-public class  morpionController {
+public class MorpionController {
 
-    @FXML private Label Label_Resultat = new Label();
-    @FXML private Label Player1_Score = new Label();
-    @FXML private Label Player1_TextScore = new Label();
-    @FXML private Label Player2_Score = new Label();
-    @FXML private Label Player2_TextScore = new Label();
-    @FXML private Label Player_Turn = new Label();
+    private static final String[][] WINNING_LINES = {
+        {"00", "01", "02"},
+        {"10", "11", "12"},
+        {"20", "21", "22"},
+        {"00", "10", "20"},
+        {"01", "11", "21"},
+        {"02", "12", "22"},
+        {"00", "11", "22"},
+        {"02", "11", "20"}
+    };
 
-    @FXML private Button button0 = new Button();
-    @FXML private Button button1 = new Button();
-    @FXML private Button button2 = new Button();
-    @FXML private Button button3 = new Button();
-    @FXML private Button button4 = new Button();
-    @FXML private Button button5 = new Button();
-    @FXML private Button button6 = new Button();
-    @FXML private Button button7 = new Button();
-    @FXML private Button button8 = new Button();
-    private List<Button> allButton;
+    @FXML private Label player1TextScore;
+    @FXML private Label player1Score;
+    @FXML private Label playerTurn;
+    @FXML private Label player2TextScore;
+    @FXML private Label player2Score;
+    @FXML private Label labelResultat;
 
-    @FXML private ImageView image0 = new ImageView();
-    @FXML private ImageView image1 = new ImageView();
-    @FXML private ImageView image2 = new ImageView();
-    @FXML private ImageView image3 = new ImageView();
-    @FXML private ImageView image4 = new ImageView();
-    @FXML private ImageView image5 = new ImageView();
-    @FXML private ImageView image6 = new ImageView();
-    @FXML private ImageView image7 = new ImageView();
-    @FXML private ImageView image8 = new ImageView();
-    private HashMap<Button, ImageView> imageOfbutton;
-;
-    private static Joueur joueur1;
-    private static Joueur joueur2;
-    private static Joueur joueurActuel;
+    // 00 10 20
+    // 01 11 21
+    // 02 12 22
+    @FXML private ImageView image00;
+    @FXML private Button button00;
+    @FXML private ImageView image10;
+    @FXML private Button button10;
+    @FXML private ImageView image20;
+    @FXML private Button button20;
+    @FXML private ImageView image01;
+    @FXML private Button button01;
+    @FXML private ImageView image11;
+    @FXML private Button button11;
+    @FXML private ImageView image21;
+    @FXML private Button button21;
+    @FXML private ImageView image02;
+    @FXML private Button button02;
+    @FXML private ImageView image12;
+    @FXML private Button button12;
+    @FXML private ImageView image22;
+    @FXML private Button button22;
 
-    private static boolean playAlone;
-    private static boolean IALevelNormal;
+    private final Map<String, Button> buttons;
+    private final Map<String, ImageView> images;
+    private final List<String> playableBox;
 
-    private HashMap<Joueur, ArrayList<Button>> buttonOfPlayer;
-    private int nbTour;
+    private final APlayer player1;
+    private final APlayer player2;
+    private APlayer currentPlayer;
 
-    // pour créer une instance
-    public morpionController() {
+    private final boolean isPlayingAlone;
+    private final boolean isIaLevelNormal;
+
+    private final HashMap<APlayer, List<String>> playerClickedBox;
+    private int nbRound;
+
+    public MorpionController(APlayer player1, APlayer player2, int currentPlayerNum, int nbPlayer, String iaLevel) {
+        this.player1 = player1;
+        this.player2 = player2;
+        this.currentPlayer = currentPlayerNum == 1 ? player1 : player2;
+
+        this.isPlayingAlone = nbPlayer == 1;
+        this.isIaLevelNormal = iaLevel == "normal";
+
+        this.buttons = new HashMap<>();
+        this.images = new HashMap<>();
+        this.playableBox = new ArrayList<>();
+
+        this.playerClickedBox = new HashMap<>();
+        this.playerClickedBox.put(player1, new ArrayList<>());
+        this.playerClickedBox.put(player2, new ArrayList<>());
+
+        this.nbRound = 0;
     }
 
     public void initialize() {
-        nbTour = 0;
-        Label_Resultat.setText("");
+        this.labelResultat.setText("");
 
-        allButton = new ArrayList<>();
-        allButton.add(button0);
-        allButton.add(button1);
-        allButton.add(button2);
-        allButton.add(button3);
-        allButton.add(button4);
-        allButton.add(button5);
-        allButton.add(button6);
-        allButton.add(button7);
-        allButton.add(button8);
+        this.player1TextScore.setText("Score de " + this.player1.getName());
+        this.player2TextScore.setText("Score de " + this.player2.getName());
+        this.playerTurn.setText(this.currentPlayer.getName());
 
-        for (Button b : allButton) {
-            b.setStyle(
-                "-fx-opacity: 1;" +
-                "-fx-background-color: transparent;" +
-                "-fx-effect: none;" +
-                "-fx-focus-color: transparent;" +
-                "-fx-faint-focus-color: transparent;" +
-                "-fx-border-color: transparent;"
-            );
-        }
+        this.setupBox("00", this.button00, this.image00);
+        this.setupBox("10", this.button10, this.image10);
+        this.setupBox("20", this.button20, this.image20);
+        this.setupBox("01", this.button01, this.image01);
+        this.setupBox("11", this.button11, this.image11);
+        this.setupBox("21", this.button21, this.image21);
+        this.setupBox("02", this.button02, this.image02);
+        this.setupBox("12", this.button12, this.image12);
+        this.setupBox("22", this.button22, this.image22);
 
-        imageOfbutton = new HashMap<>();
-        imageOfbutton.put(button0, image0);
-        imageOfbutton.put(button1, image1);
-        imageOfbutton.put(button2, image2);
-        imageOfbutton.put(button3, image3);
-        imageOfbutton.put(button4, image4);
-        imageOfbutton.put(button5, image5);
-        imageOfbutton.put(button6, image6);
-        imageOfbutton.put(button7, image7);
-        imageOfbutton.put(button8, image8);
-
-        buttonOfPlayer = new HashMap<>();
-        buttonOfPlayer.put(joueur1, new ArrayList<>());
-        buttonOfPlayer.put(joueur2, new ArrayList<>());
-
-        Player1_TextScore.setText("Score de " + joueur1.getNom());
-        Player2_TextScore.setText("Score de " + joueur2.getNom());
-        Player_Turn.setText(joueurActuel.getNom());
-
-        if (joueurActuel.equals(joueur2) && isPlayingAlone()) {
-            jouer(IAPlay());
+        if (this.currentPlayer.equals(this.player2) && this.isPlayingAlone) {
+            this.jouer(this.getIaPlay());
         }
     }
 
-    public void setJoueur1(Joueur joueur) { joueur1 = joueur; }
-    public void setJoueur2(Joueur joueur) { joueur2 = joueur; }
-    public void setJoueurActuel(Joueur joueur) { joueurActuel = joueur; }
-    public void setPlayAlone(boolean b) { playAlone = b; }
-    public void setIALevelNormal(boolean b) { IALevelNormal = b; }
-
-    public boolean isPlayingAlone() { return playAlone; }
-    public boolean isIALevelNormal() { return IALevelNormal; }
-
-    @FXML
-    void cliqued(ActionEvent event) {
-        if (joueurActuel.equals(joueur1) || !isPlayingAlone()) {
-            Button button = (Button) event.getSource();
-            jouer(button);
-        }
+    private void setupBox(String boxValue, Button button, ImageView iv) {
+        this.buttons.put(boxValue, button);
+        this.images.put(boxValue, iv);
+        button.setOnAction(e -> this.play(boxValue));
+        this.playableBox.add(boxValue);
     }
 
-    private void jouer(Button button) {
-        buttonOfPlayer.get(joueurActuel).add(button);
+    private void play(String boxValue) {
+        this.playableBox.remove(boxValue);
+        this.playerClickedBox.get(this.currentPlayer).add(boxValue);
+
+        Button button = this.buttons.get(boxValue);
         button.setDisable(true);
+        this.currentPlayer.fillClickedButton(button);
 
-        if (joueurActuel.isChoixCaractere()) {
-            button.setText(joueurActuel.getCaractere());
-            button.setFont(joueurActuel.getFont());
-            button.setStyle(joueurActuel.getColor());
-        }
-        else {
-            button.setGraphic(joueurActuel.getImage());
-        }
         // Créer un effet de désaturation
         ColorAdjust monochrome = new ColorAdjust();
         monochrome.setSaturation(-1); // -1 = complètement désaturé (noir & blanc)
-        imageOfbutton.get(button).setEffect(monochrome);
+        this.images.get(boxValue).setEffect(monochrome);
 
-        finDePartie();
-
-        changePlayer();
+        this.nextRound();
     }
 
-    private void changePlayer() {
-        joueurActuel = joueurActuel.equals(joueur1) ? joueur2 : joueur1;
-        Player_Turn.setText(joueurActuel.getNom());
+    public void nextRound() {
+        this.nbTour++;
+
+        List<String> winningBox = this.hasGameBeenWon();
+        if (winningBox != null) {
+            this.currentPlayer.incScore();
+            this.boutonVictoire(winningBox);
+
+            this.player1Score.setText(String.valueOf(this.player1.getScore()));
+            this.player2Score.setText(String.valueOf(this.player2.getScore()));
+
+            this.startNewGame();
+        }  else if (nbTour == 9) {   // vérifie les égalités
+            this.labelResultat.setText("Egalite");
+            this.startNewGame();
+        }
+
+        this.updateCurrentPlayer();
+
+        if (this.currentPlayer.equals(this.player2) && this.isPlayingAlone) {
+            this.jouer(this.getIaPlay());
+        }
     }
 
-    private Button IAPlay() {
-        Button b = null;
+    private void updateCurrentPlayer() {
+        this.currentPlayer = this.currentPlayer.equals(this.player1) ? this.player2 : this.player1;
+        this.playerTurn.setText(this.currentPlayer.getName());
+    }
 
-        if (isIALevelNormal()) {
-            // si l'IA à un niveau normal, on l'a fait jouer aléatoirement
-            while (true) {
-                Random r = new Random();
-                b = allButton.get(r.nextInt(9));
-                if (!b.isDisable()) {
-                    return b;
+    public List<String> hasGameBeenWon() {
+        List<String> clickedBox = this.playerClickedBox.get(this.currentPlayer);
+        List<String> winningBox = new ArrayList<>();
+
+        for (String[] line : MorpionController.WINNING_LINES) {
+            winningBox.clear();
+
+            for (String box : line) {
+                if (!clickedBox.contains(box)) {
+                    break;
                 }
+                winningBox.add(box);
+            }
+    
+            if (winningBox.size() == 3) {
+                return winningBox;
             }
         }
-        else {
-            // on vérifie si l'IA peut gagner
-            b = canWin(joueur2);
-            if (b != null) {
-                return b;
-            }
 
-            // si l'IA ne peut pas gagner, on vérifie si le joueur peut gagner
-            b = canWin(joueur1);
-            if (b != null) {
-                return b;
-            }
-
-            // si personne ne peut gagner l'IA joue
-            while (true) {
-                Random r = new Random();
-                b = allButton.get(r.nextInt(9));
-                if (!b.isDisable()) {
-                    return b;
-                }
-            }
-        }
-    }
-
-    private Button canWin(Joueur j) {
-        ArrayList<Button> lButton = buttonOfPlayer.get(j);
-        // on vérifie si l'IA peut gagner
-        if (!button0.isDisable() && (
-                        (lButton.contains(button1) && lButton.contains(button2)) ||
-                        (lButton.contains(button3) && lButton.contains(button6)) ||
-                        (lButton.contains(button4) && lButton.contains(button8)))) {
-            return button0;
-        }
-        else if (!button1.isDisable() && (
-                        (lButton.contains(button0) && lButton.contains(button2)) ||
-                        (lButton.contains(button4) && lButton.contains(button7)))) {
-            return button1;
-        }
-        else if (!button2.isDisable() && (
-                        (lButton.contains(button0) && lButton.contains(button1)) ||
-                        (lButton.contains(button5) && lButton.contains(button8)) ||
-                        (lButton.contains(button4) && lButton.contains(button6)))) {
-            return button2;
-        }
-        else if (!button3.isDisable() && (
-                        (lButton.contains(button0) && lButton.contains(button6)) ||
-                        (lButton.contains(button4) && lButton.contains(button5)))) {
-            return button3;
-        }
-        else if (!button4.isDisable() && (
-                        (lButton.contains(button0) && lButton.contains(button8)) ||
-                        (lButton.contains(button1) && lButton.contains(button7)) ||
-                        (lButton.contains(button2) && lButton.contains(button6)) ||
-                        (lButton.contains(button3) && lButton.contains(button5)))) {
-            return button4;
-        }
-        else if (!button5.isDisable() && (
-                        (lButton.contains(button2) && lButton.contains(button8)) ||
-                        (lButton.contains(button3) && lButton.contains(button4)))) {
-            return button5;
-        }
-        else if (!button6.isDisable() && (
-                        (lButton.contains(button0) && lButton.contains(button3)) ||
-                        (lButton.contains(button2) && lButton.contains(button4)) ||
-                        (lButton.contains(button7) && lButton.contains(button8)))) {
-            return button6;
-        }
-        else if (!button7.isDisable() && (
-                        (lButton.contains(button1) && lButton.contains(button4)) ||
-                        (lButton.contains(button6) && lButton.contains(button8)))) {
-            return button7;
-        }
-        else if (!button8.isDisable() && (
-                        (lButton.contains(button0) && lButton.contains(button4)) ||
-                        (lButton.contains(button2) && lButton.contains(button5)) ||
-                        (lButton.contains(button6) && lButton.contains(button7)))) {
-            return button8;
-        }
         return null;
     }
 
-    public boolean partieGagnee() {
-        ArrayList<Button> lButton = buttonOfPlayer.get(joueurActuel);
-
-        // Ligne
-        if (lButton.contains(button0) && lButton.contains(button1) && lButton.contains(button2)) {
-            boutonVictoire(new Button[] {button0, button1, button2});
-            return true;
+    private String getIaPlay() {
+        if (this.isIaLevelNormal) {
+            // si l'IA à un niveau normal, on l'a fait jouer aléatoirement
+            return this.playableBox.get(new Random().nextInt(this.playableBox.size()));
         }
-        else if (lButton.contains(button3) && lButton.contains(button4) && lButton.contains(button5)) {
-            boutonVictoire(new Button[] {button3, button4, button5});
-            return true;
-        }
-        else if (lButton.contains(button6) && lButton.contains(button7) && lButton.contains(button8)) {
-            boutonVictoire(new Button[] {button6, button7, button8});
-            return true;
+        
+        // on vérifie si l'IA peut gagner
+        String winBox = this.canWin(this.player2);
+        if (winBox != null) {
+            return winBox;
         }
 
-        // Colone
-        else if (lButton.contains(button0) && lButton.contains(button3) && lButton.contains(button6)) {
-            boutonVictoire(new Button[] {button0, button3, button6});
-            return true;
-        }
-        else if (lButton.contains(button1) && lButton.contains(button4) && lButton.contains(button7)) {
-            boutonVictoire(new Button[] {button1, button4, button7});
-            return true;
-        }
-        else if (lButton.contains(button2) && lButton.contains(button5) && lButton.contains(button8)) {
-            boutonVictoire(new Button[] {button2, button5, button8});
-            return true;
+        // si l'IA ne peut pas gagner, on vérifie si le joueur peut gagner
+        String loseBox = this.canWin(this.player1);
+        if (loseBox != null) {
+            return loseBox;
         }
 
-        // Diagonales
-        else if (lButton.contains(button0) && lButton.contains(button4) && lButton.contains(button8)) {
-            boutonVictoire(new Button[] {button0, button4, button8});
-            return true;
-        }
-        else if (lButton.contains(button2) && lButton.contains(button4) && lButton.contains(button6)) {
-            boutonVictoire(new Button[] {button2, button4, button6});
-            return true;
-        }
-
-        return false;
+        // si personne ne peut gagner l'IA joue
+        return this.playableBox.get(new Random().nextInt(this.playableBox.size()));
     }
 
-    private void boutonVictoire(Button[] lButton) {
-        for (Button b : allButton) {
-            b.setDisable(true);
+    private Button canWin(APlayer player) {
+        List<String> clickedBox = this.playerClickedBox.get(player);
+    
+        for (String[] line : MorpionController.WINNING_LINES) {
+            int count = 0;
+            String missingBox = null;
+    
+            for (String box : line) {
+                if (clickedBox.contains(box)) {
+                    count++;
+                } else {
+                    missingBox = box;
+                }
+            }
+    
+            if (count == 2 && this.playableBox.contains(missingBox)) {
+                return missingBox;
+            }
+        }
+
+        return null;
+    }
+
+    private void boutonVictoire(List<String> winningBox) {
+        for (String box : this.buttons.keySet()) {
+            this.buttons.get(box).setDisable(true);
+
             // Créer un effet de désaturation
             ColorAdjust monochrome = new ColorAdjust();
             monochrome.setSaturation(-1); // -1 = complètement désaturé (noir & blanc)
-            imageOfbutton.get(b).setEffect(monochrome);
+            this.images.get(box).setEffect(monochrome);
         }
-        for (int i=0; i<3; i++) {
-            lButton[i].setStyle("-fx-background-color: #efc905;");
+
+        for (String box : winningBox) {
+            this.buttons.get(box).setStyle("-fx-background-color: #efc905;");
         }
-        Label_Resultat.setText("Victoire de " + joueurActuel.getNom());
+
+        this.labelResultat.setText("Victoire de " + this.currentPlayer.getName());
     }
 
-    public void resetGame(int time) {
-        nbTour = 0;
-
-        PauseTransition pause = new PauseTransition(Duration.seconds(time));
-        pause.setOnFinished(event -> {
-            // pour éviter les bugs avec la fin de partie
-            for (Button button : allButton) {
+    public void startNewGame(int time) {
+        PauseTransition pause = new PauseTransition(Duration.seconds(5));
+        pause.setOnFinished(e -> {
+            this.nbTour = 0;
+            this.labelResultat.setText("");
+    
+            this.playerClickedBox.get(this.player1).clear();
+            this.playerClickedBox.get(this.player2).clear();
+            this.playableBox.clear();
+            this.playableBox.addAll("00", "10", "20", "01", "11", "21", "02", "12", "22");
+            
+            for (String box : this.playableBox) {
+                Button b = this.buttons.get(box);
                 button.setDisable(false);
                 button.setText("");
                 button.setGraphic(null);
-                button.setStyle(
-                    "-fx-opacity: 1;" +
-                    "-fx-background-color: transparent;" +
-                    "-fx-effect: none;" +
-                    "-fx-focus-color: transparent;" +
-                    "-fx-faint-focus-color: transparent;" +
-                    "-fx-border-color: transparent;"
-                );
+                button.setStyle("-fx-background-color: transparent;");
 
                 // enlève l'effet de désaturation
-                imageOfbutton.get(button).setEffect(null);
-            }
-            buttonOfPlayer.get(joueur1).clear();
-            buttonOfPlayer.get(joueur2).clear();
-            Label_Resultat.setText("");
-        });
-        pause.play();
-    }
-
-    public void finDePartie() {
-        nbTour++;
-
-        if (partieGagnee()) {
-            joueurActuel.incScore();
-
-            Player1_Score.setText(String.valueOf(joueur1.getScore()));
-            Player2_Score.setText(String.valueOf(joueur2.getScore()));
-
-            resetGame(3);
-        }
-
-        // vérifie les égalités
-        else {
-            if (nbTour == 9) {
-                Label_Resultat.setText("Egalite");
-                resetGame(1);
-            }
-        }
-
-        PauseTransition pause = new PauseTransition(Duration.seconds(1));
-        pause.setOnFinished(event -> {
-            // pour éviter les bugs avec la fin de partie
-            // si on est au tour du joueur 2, on vérifie si est une IA
-            if (joueurActuel.equals(joueur2) && isPlayingAlone()) {
-                try {
-                    jouer(IAPlay());
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                this.images.get(box).setEffect(null);
             }
         });
         pause.play();
     }
 
     @FXML
-    void MB_Leave(ActionEvent event) {
-        Morpion.launchQuitter();
-    }
-
-    @FXML
-    void MB_Parameter(ActionEvent event) {
+    void openParameterWindow(ActionEvent event) {
         Morpion.launchParametre();
     }
 
     @FXML
-    void MB_Reset(ActionEvent event) {
-        resetGame(0);
-        Player1_Score.setText("0");
-        Player2_Score.setText("0");
-        joueur1.resetScore();
-        joueur2.resetScore();
+    void resetGame(ActionEvent event) {
+        this.startNewGame();
+        this.player1Score.setText("0");
+        this.player2Score.setText("0");
+        this.player1.resetScore();
+        this.player2.resetScore();
     }
 
     @FXML
-    void MB_Rules(ActionEvent event) {
+    void openRulesWindow(ActionEvent event) {
         Morpion.launchRegle();
+    }
+
+    @FXML
+    public void openLeaveWindow(ActionEvent event) {
+        Morpion.launchQuitter();
     }
 
 }
