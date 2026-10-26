@@ -4,7 +4,7 @@ import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-public abstract class PlayerImage extends APlayer {
+public class PlayerImage extends APlayer {
     private final Image image;
 
     public PlayerImage(String name, String lienImg) {

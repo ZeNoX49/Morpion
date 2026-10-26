@@ -15,9 +15,9 @@ public class PlayerText extends APlayer {
         this.font = new Font(font, size);
 
         // Convertir la couleur en format hexadécimal
-        int r = (int) (this.color.getRed() * 255);
-        int g = (int) (this.color.getGreen() * 255);
-        int b = (int) (this.color.getBlue() * 255);
+        int r = (int) (color.getRed() * 255);
+        int g = (int) (color.getGreen() * 255);
+        int b = (int) (color.getBlue() * 255);
         this.colorStyle = String.format("-fx-text-fill: #%02X%02X%02X;", r, g, b);
     }
 

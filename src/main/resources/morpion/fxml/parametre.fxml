@@ -16,7 +16,7 @@
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1067.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="morpion.controller.parametreController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1067.0" xmlns="http://javafx.com/javafx/24" xmlns:fx="http://javafx.com/fxml/1" fx:controller="morpion.controller.ParametreController">
    <children>
       <ImageView fitHeight="600.0" fitWidth="1067.0" pickOnBounds="true" preserveRatio="true">
          <image>
@@ -60,8 +60,8 @@
                         </HBox>
                         <HBox alignment="CENTER" prefHeight="2.0" prefWidth="275.0" spacing="10.0">
                            <children>
-                              <Button fx:id="player1BtnCaractere" disable="true" mnemonicParsing="false" onAction="#Player1_Button" prefHeight="25.0" prefWidth="135.0" text="Caractère" />
-                              <Button fx:id="player1BtnImage" mnemonicParsing="false" onAction="#Player1_Button" prefHeight="25.0" prefWidth="135.0" text="Image" />
+                              <Button fx:id="player1BtnCaractere" disable="true" mnemonicParsing="false" prefHeight="25.0" prefWidth="135.0" text="Caractère" />
+                              <Button fx:id="player1BtnImage" mnemonicParsing="false" prefHeight="25.0" prefWidth="135.0" text="Image" />
                            </children>
                         </HBox>
                         <VBox prefHeight="200.0" prefWidth="100.0" spacing="2.0">
@@ -144,7 +144,7 @@
                                           <Image url="@../image/planete/planete_1joueur.png" />
                                        </image>
                                     </ImageView>
-                                    <Button fx:id="btnNbPlayer1" alignment="BOTTOM_CENTER" mnemonicParsing="false" onAction="#nbPlayer" prefHeight="110.0" prefWidth="100.0" style="-fx-background-color: transparent;" text="1" textFill="WHITE">
+                                    <Button fx:id="btnNbPlayer1" alignment="BOTTOM_CENTER" mnemonicParsing="false" prefHeight="110.0" prefWidth="100.0" style="-fx-background-color: transparent;" text="1" textFill="WHITE">
                                        <font>
                                           <Font name="System Bold" size="25.0" />
                                        </font>
@@ -163,7 +163,7 @@
                                           <Image url="@../image/planete/planete_2joueur2.png" />
                                        </image>
                                     </ImageView>
-                                    <Button fx:id="btnNbPlayer2" alignment="BOTTOM_CENTER" disable="true" layoutY="-1.0" mnemonicParsing="false" onAction="#nbPlayer" prefHeight="110.0" prefWidth="100.0" style="-fx-background-color: transparent;" text="2" textFill="WHITE">
+                                    <Button fx:id="btnNbPlayer2" alignment="BOTTOM_CENTER" layoutY="-1.0" mnemonicParsing="false" prefHeight="110.0" prefWidth="100.0" style="-fx-background-color: transparent;" text="2" textFill="WHITE">
                                        <font>
                                           <Font name="System Bold" size="25.0" />
                                        </font>
@@ -190,7 +190,7 @@
                                           <Image url="@../image/planete/planete_IANomal.png" />
                                        </image>
                                     </ImageView>
-                                    <Button fx:id="btnIALevelNormal" alignment="BOTTOM_CENTER" disable="true" mnemonicParsing="false" onAction="#IALevel" prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: transparent;" text="Normal" textFill="WHITE">
+                                    <Button fx:id="btnIALevelNormal" alignment="BOTTOM_CENTER" mnemonicParsing="false" prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: transparent;" text="Normal" textFill="WHITE">
                                        <font>
                                           <Font name="System Bold" size="15.0" />
                                        </font>
@@ -204,7 +204,7 @@
                                           <Image url="@../image/planete/planete_IAAvancée.png" />
                                        </image>
                                     </ImageView>
-                                    <Button fx:id="btnIALevelAdvanced" alignment="BOTTOM_CENTER" mnemonicParsing="false" onAction="#IALevel" prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: transparent;" text="Avancée" textFill="WHITE">
+                                    <Button fx:id="btnIALevelAdvanced" alignment="BOTTOM_CENTER" mnemonicParsing="false" prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: transparent;" text="Avancée" textFill="WHITE">
                                        <font>
                                           <Font name="System Bold" size="15.0" />
                                        </font>
@@ -231,7 +231,7 @@
                                           <Image url="@../image/planete/planete_FT_J1.png" />
                                        </image>
                                     </ImageView>
-                                    <Button fx:id="btnFirstTurnPlayer1" alignment="BOTTOM_CENTER" disable="true" mnemonicParsing="false" onAction="#firstTurn" prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: transparent;" text="Joueur 1" textFill="WHITE">
+                                    <Button fx:id="btnFirstTurnPlayer1" alignment="BOTTOM_CENTER" mnemonicParsing="false" prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: transparent;" text="Joueur 1" textFill="WHITE">
                                        <font>
                                           <Font name="System Bold" size="15.0" />
                                        </font>
@@ -245,7 +245,7 @@
                                           <Image url="@../image/planete/planete_FT_JA.png" />
                                        </image>
                                     </ImageView>
-                                    <Button fx:id="btnFirstTurnPlayer2" alignment="BOTTOM_CENTER" mnemonicParsing="false" onAction="#firstTurn" prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: transparent;" text="Aléatoire" textFill="WHITE">
+                                    <Button fx:id="btnFirstTurnRandom" alignment="BOTTOM_CENTER" mnemonicParsing="false" prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: transparent;" text="Aléatoire" textFill="WHITE">
                                        <font>
                                           <Font name="System Bold" size="15.0" />
                                        </font>
@@ -259,7 +259,7 @@
                                           <Image url="@../image/planete/planete_FT_J2.png" />
                                        </image>
                                     </ImageView>
-                                    <Button fx:id="btnFirstTurnRandom" alignment="BOTTOM_CENTER" mnemonicParsing="false" onAction="#firstTurn" prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: transparent;" text="Joueur 2" textFill="WHITE">
+                                    <Button fx:id="btnFirstTurnPlayer2" alignment="BOTTOM_CENTER" mnemonicParsing="false" prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: transparent;" text="Joueur 2" textFill="WHITE">
                                        <font>
                                           <Font name="System Bold" size="15.0" />
                                        </font>
@@ -311,8 +311,8 @@
                         </HBox>
                         <HBox alignment="CENTER" prefHeight="2.0" prefWidth="275.0" spacing="10.0">
                            <children>
-                              <Button fx:id="player2BtnCaractere" mnemonicParsing="false" onAction="#Player2_Button" prefHeight="25.0" prefWidth="135.0" text="Caractère" />
-                              <Button fx:id="player2BtnImage" disable="true" mnemonicParsing="false" onAction="#Player2_Button" prefHeight="25.0" prefWidth="135.0" text="Image" />
+                              <Button fx:id="player2BtnCaractere" mnemonicParsing="false" prefHeight="25.0" prefWidth="135.0" text="Caractère" />
+                              <Button fx:id="player2BtnImage" disable="true" mnemonicParsing="false" prefHeight="25.0" prefWidth="135.0" text="Image" />
                            </children>
                         </HBox>
                         <VBox prefHeight="200.0" prefWidth="100.0" spacing="2.0">

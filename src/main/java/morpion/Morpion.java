@@ -1,14 +1,15 @@
 package morpion;
 
+import java.io.IOException;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import morpion.controller.MorpionController;
 
-import java.io.IOException;
-
 public class Morpion extends Application {
+
     private static Stage commonStage;
 
     @Override

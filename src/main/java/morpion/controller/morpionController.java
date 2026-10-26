@@ -1,23 +1,22 @@
 package morpion.controller;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+
+import javafx.animation.PauseTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-
-import javafx.animation.PauseTransition;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 import morpion.Morpion;
 import morpion.player.APlayer;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
 
 public class MorpionController {
 
@@ -73,7 +72,6 @@ public class MorpionController {
     private final boolean isIaLevelNormal;
 
     private final HashMap<APlayer, List<String>> playerClickedBox;
-    private int nbRound;
 
     public MorpionController(APlayer player1, APlayer player2, int currentPlayerNum, int nbPlayer, String iaLevel) {
         this.player1 = player1;
@@ -81,7 +79,7 @@ public class MorpionController {
         this.currentPlayer = currentPlayerNum == 1 ? player1 : player2;
 
         this.isPlayingAlone = nbPlayer == 1;
-        this.isIaLevelNormal = iaLevel == "normal";
+        this.isIaLevelNormal = iaLevel.equals("normal");
 
         this.buttons = new HashMap<>();
         this.images = new HashMap<>();
@@ -90,8 +88,6 @@ public class MorpionController {
         this.playerClickedBox = new HashMap<>();
         this.playerClickedBox.put(player1, new ArrayList<>());
         this.playerClickedBox.put(player2, new ArrayList<>());
-
-        this.nbRound = 0;
     }
 
     public void initialize() {
@@ -112,7 +108,7 @@ public class MorpionController {
         this.setupBox("22", this.button22, this.image22);
 
         if (this.currentPlayer.equals(this.player2) && this.isPlayingAlone) {
-            this.jouer(this.getIaPlay());
+            this.play(this.getIaPlay());
         }
     }
 
@@ -140,26 +136,24 @@ public class MorpionController {
     }
 
     public void nextRound() {
-        this.nbTour++;
-
         List<String> winningBox = this.hasGameBeenWon();
         if (winningBox != null) {
             this.currentPlayer.incScore();
-            this.boutonVictoire(winningBox);
+            this.highlightWinnigButton(winningBox);
 
             this.player1Score.setText(String.valueOf(this.player1.getScore()));
             this.player2Score.setText(String.valueOf(this.player2.getScore()));
 
             this.startNewGame();
-        }  else if (nbTour == 9) {   // vérifie les égalités
-            this.labelResultat.setText("Egalite");
+        }  else if (this.playableBox.isEmpty()) {   // vérifie les égalités
+            this.labelResultat.setText("Égalité");
             this.startNewGame();
         }
 
         this.updateCurrentPlayer();
 
         if (this.currentPlayer.equals(this.player2) && this.isPlayingAlone) {
-            this.jouer(this.getIaPlay());
+            this.play(this.getIaPlay());
         }
     }
 
@@ -212,7 +206,7 @@ public class MorpionController {
         return this.playableBox.get(new Random().nextInt(this.playableBox.size()));
     }
 
-    private Button canWin(APlayer player) {
+    private String canWin(APlayer player) {
         List<String> clickedBox = this.playerClickedBox.get(player);
     
         for (String[] line : MorpionController.WINNING_LINES) {
@@ -235,7 +229,7 @@ public class MorpionController {
         return null;
     }
 
-    private void boutonVictoire(List<String> winningBox) {
+    private void highlightWinnigButton(List<String> winningBox) {
         for (String box : this.buttons.keySet()) {
             this.buttons.get(box).setDisable(true);
 
@@ -252,23 +246,22 @@ public class MorpionController {
         this.labelResultat.setText("Victoire de " + this.currentPlayer.getName());
     }
 
-    public void startNewGame(int time) {
+    public void startNewGame() {
         PauseTransition pause = new PauseTransition(Duration.seconds(5));
         pause.setOnFinished(e -> {
-            this.nbTour = 0;
             this.labelResultat.setText("");
     
             this.playerClickedBox.get(this.player1).clear();
             this.playerClickedBox.get(this.player2).clear();
             this.playableBox.clear();
-            this.playableBox.addAll("00", "10", "20", "01", "11", "21", "02", "12", "22");
+            this.playableBox.addAll(Arrays.asList("00", "10", "20", "01", "11", "21", "02", "12", "22"));
             
             for (String box : this.playableBox) {
                 Button b = this.buttons.get(box);
-                button.setDisable(false);
-                button.setText("");
-                button.setGraphic(null);
-                button.setStyle("-fx-background-color: transparent;");
+                b.setDisable(false);
+                b.setText("");
+                b.setGraphic(null);
+                b.setStyle("-fx-background-color: transparent;");
 
                 // enlève l'effet de désaturation
                 this.images.get(box).setEffect(null);

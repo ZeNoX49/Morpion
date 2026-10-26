@@ -1,5 +1,7 @@
 package morpion.controller;
 
+import java.util.Random;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -12,13 +14,12 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import morpion.Morpion;
 import morpion.player.APlayer;
-
-import java.io.IOException;
-import java.util.Random;
+import morpion.player.PlayerImage;
+import morpion.player.PlayerText;
 
 public class ParametreController {
 
-    private enum FirstTurn {
+    private static enum FirstTurn {
         J1, J2, ALEA;
     }
 
@@ -74,16 +75,129 @@ public class ParametreController {
         this.player1Police.getItems().addAll(Font.getFamilies());
         this.player2Police.getItems().addAll(Font.getFamilies());
 
-        // this.nbPlayer = 2;
-        // this.iaLevel = this.btnIALevelNormal.getText();
-        // this.firstPlayer = FirstTurn.J1;
-        // this.lastPushDesignBtnPlayer2 = this.player2BtnImage.getText();
-        // this.setAiEnabled(this.nbPlayer == 1);
+        this.btnNbPlayer1.setOnAction(e -> this.updatePlayerNumber(1));
+        this.btnNbPlayer2.setOnAction(e -> this.updatePlayerNumber(2));
+        this.btnIALevelNormal.setOnAction(e -> this.updateIaLevel("normal"));
+        this.btnIALevelAdvanced.setOnAction(e -> this.updateIaLevel("advanced"));
+        this.btnFirstTurnPlayer1.setOnAction(e -> this.updateFirstTurn(FirstTurn.J1));
+        this.btnFirstTurnPlayer2.setOnAction(e -> this.updateFirstTurn(FirstTurn.J2));
+        this.btnFirstTurnRandom.setOnAction(e -> this.updateFirstTurn(FirstTurn.ALEA));
+        this.player1BtnCaractere.setOnAction(e -> this.updatePlayer1Personnalization("caractere"));
+        this.player1BtnImage.setOnAction(e -> this.updatePlayer1Personnalization("image"));
+        this.player2BtnCaractere.setOnAction(e -> this.updatePlayer2Personnalization("caractere"));
+        this.player2BtnImage.setOnAction(e -> this.updatePlayer2Personnalization("image"));
+        
+        this.lastPushDesignBtnPlayer2 = "image";
+        this.updatePlayerNumber(2);
+        this.updateIaLevel("normal");
+        this.updateFirstTurn(FirstTurn.J1);
+        this.updatePlayer1Personnalization("caractere");
+        this.updatePlayer2Personnalization("image");
+    }
 
-        this.setMonochrome(this.imageNbPlayer1);
-        this.setMonochrome(this.imageFirstTurnAlea);
-        this.setMonochrome(this.imageFirstTurnJ2);
-        this.setMonochrome(this.imageIALevelAdvanced);
+    private void updatePlayerNumber(int nbPlayer) {
+        this.nbPlayer = nbPlayer;
+        
+        if (nbPlayer == 1) {
+            this.btnNbPlayer1.setDisable(true);
+            this.btnNbPlayer2.setDisable(false);
+
+            // désactiver tout les paramètres de player2
+            this.player2Name.setDisable(true);
+            this.player2BtnCaractere.setDisable(true);
+            this.player2Caractere.setDisable(true);
+            this.player2CouleurPolice.setDisable(true);
+            this.player2Police.setDisable(true);
+            this.player2TaillePolice.setDisable(true);
+            this.player2BtnImage.setDisable(true);
+            this.player2Image.setDisable(true);
+
+            this.imageNbPlayer1.setEffect(null);
+            this.setMonochrome(this.imageNbPlayer21);
+            this.setMonochrome(this.imageNbPlayer22);
+
+            this.setAiEnabled(true);
+        } else {
+            this.btnNbPlayer1.setDisable(false);
+            this.btnNbPlayer2.setDisable(true);
+
+            // Activer les paramètes de player 2
+            this.player2Name.setDisable(false);
+            this.updatePlayer2Personnalization(this.lastPushDesignBtnPlayer2);
+
+            this.setMonochrome(this.imageNbPlayer1);
+            this.imageNbPlayer21.setEffect(null);
+            this.imageNbPlayer22.setEffect(null);
+
+            this.setAiEnabled(false);
+        }
+    }
+
+    private void setAiEnabled(boolean b) {
+        if (b) {
+            if (this.iaLevel.equals("normal")) {
+                this.btnIALevelAdvanced.setDisable(false);
+                this.imageIALevelNormal.setEffect(null);
+            } else {
+                this.btnIALevelNormal.setDisable(false);
+                this.imageIALevelAdvanced.setEffect(null);
+            }
+        } else {
+            this.btnIALevelNormal.setDisable(true);
+            this.btnIALevelAdvanced.setDisable(true);
+            this.setMonochrome(this.imageIALevelNormal);
+            this.setMonochrome(this.imageIALevelAdvanced);
+        }
+    }
+
+    private void updateIaLevel(String iaLevel) {
+        if (this.nbPlayer == 2) {
+            this.iaLevel = iaLevel;
+
+            if (iaLevel.equals("normal")) {
+                this.btnIALevelNormal.setDisable(true);
+                this.imageIALevelNormal.setEffect(null);
+                this.btnIALevelAdvanced.setDisable(false);
+                this.setMonochrome(this.imageIALevelAdvanced);
+            } else {
+                this.btnIALevelNormal.setDisable(false);
+                this.setMonochrome(this.imageIALevelNormal);
+                this.btnIALevelAdvanced.setDisable(true);
+                this.imageIALevelAdvanced.setEffect(null);
+            }
+        }
+    }
+
+    private void updateFirstTurn(FirstTurn firstTurn) {
+        this.firstPlayer = firstTurn;
+
+        switch (firstTurn) {
+            case J1 -> {
+                this.btnFirstTurnPlayer1.setDisable(true);
+                this.btnFirstTurnPlayer2.setDisable(false);
+                this.btnFirstTurnRandom.setDisable(false);
+                this.imageFirstTurnJ1.setEffect(null);
+                this.setMonochrome(this.imageFirstTurnJ2);
+                this.setMonochrome(this.imageFirstTurnAlea);
+            }
+            case J2 -> {
+                this.btnFirstTurnPlayer1.setDisable(false);
+                this.btnFirstTurnPlayer2.setDisable(true);
+                this.btnFirstTurnRandom.setDisable(false);
+                this.setMonochrome(this.imageFirstTurnJ1);
+                this.imageFirstTurnJ2.setEffect(null);
+                this.setMonochrome(this.imageFirstTurnAlea);
+            }
+            case ALEA -> {
+                this.btnFirstTurnPlayer1.setDisable(false);
+                this.btnFirstTurnPlayer2.setDisable(false);
+                this.btnFirstTurnRandom.setDisable(true);
+                this.setMonochrome(this.imageFirstTurnJ1);
+                this.setMonochrome(this.imageFirstTurnJ2);
+                this.imageFirstTurnAlea.setEffect(null);
+            }
+            default -> {}
+        }
     }
 
     private void setMonochrome(ImageView iv) {
@@ -93,253 +207,82 @@ public class ParametreController {
         iv.setEffect(monochrome);
     }
 
-    // @FXML
-    // void IALevel(ActionEvent event) {
-    //     if (this.nbPlayer == 2) {
-    //         Button source = (Button) event.getSource();
-    //         if (source.equals(this.btnIALevelNormal)) {
-    //             IALastButtonPress = this.btnIALevelNormal;
+    private void updatePlayer1Personnalization(String type) {
+        boolean carPerso = type.equals("caractere");
+        
+        this.player1BtnCaractere.setDisable(carPerso);
+        this.player1BtnImage.setDisable(!carPerso);
 
-    //             this.btnIALevelNormal.setDisable(true);
-    //             ImageIALevelNormal.setEffect(null);
-    //             this.btnIALevelAdvanced.setDisable(false);
-    //             this.setMonochrome(ImageIALevelAdvanced);
-    //         } else {
-    //             IALastButtonPress = this.btnIALevelAdvanced;
+        this.player1Caractere.setDisable(!carPerso);
+        this.player1CouleurPolice.setDisable(!carPerso);
+        this.player1Police.setDisable(!carPerso);
+        this.player1TaillePolice.setDisable(!carPerso);
 
-    //             this.btnIALevelNormal.setDisable(false);
-    //             this.setMonochrome(ImageIALevelNormal);
-    //             this.btnIALevelAdvanced.setDisable(true);
-    //             ImageIALevelAdvanced.setEffect(null);
-    //         }
-    //     }
-    // }
+        this.player1Image.setDisable(carPerso);
+    }
 
-    // @FXML
-    // void player1Button(ActionEvent event) {
-    //     Button source = (Button)event.getSource();
-    //     // Caractère
-    //     if (source.equals(Player1btnCaractere)) {
-    //         player1btnCaractere.setDisable(true);
-    //         player1btnImage.setDisable(false);
+    private void updatePlayer2Personnalization(String type) {
+        this.lastPushDesignBtnPlayer2 = type;
 
-    //         player1Caractere.setDisable(false);
-    //         player1CouleurPolice.setDisable(false);
-    //         player1Police.setDisable(false);
-    //         player1TaillePolice.setDisable(false);
+        boolean carPerso = type.equals("caractere");
+        
+        this.player2BtnCaractere.setDisable(carPerso);
+        this.player2BtnImage.setDisable(!carPerso);
 
-    //         player1Image.setDisable(true);
-    //     }
-    //     // Image
-    //     else {
-    //         player1btnCaractere.setDisable(false);
-    //         player1btnImage.setDisable(true);
+        this.player2Caractere.setDisable(!carPerso);
+        this.player2CouleurPolice.setDisable(!carPerso);
+        this.player2Police.setDisable(!carPerso);
+        this.player2TaillePolice.setDisable(!carPerso);
 
-    //         player1Caractere.setDisable(true);
-    //         player1CouleurPolice.setDisable(true);
-    //         player1Police.setDisable(true);
-    //         player1TaillePolice.setDisable(true);
-
-    //         player1Image.setDisable(false);
-    //     }
-    // }
-
-    // @FXML
-    // void player2Button(ActionEvent event) {
-    //     Button source = (Button) event.getSource();
-    //     player2Personnalization(source);
-    // }
-
-    // private void player2Personnalization(Button source) {
-    //     // Caractère
-    //     if (source.equals(Player2btnCaractere)) {
-    //         player2LastbtnPress = player2btnCaractere;
-
-    //         player2btnCaractere.setDisable(true);
-    //         player2btnImage.setDisable(false);
-
-    //         player2Caractere.setDisable(false);
-    //         player2CouleurPolice.setDisable(false);
-    //         player2Police.setDisable(false);
-    //         player2TaillePolice.setDisable(false);
-
-    //         player2Image.setDisable(true);
-    //     }
-    //     // Image
-    //     else {
-    //         player2LastbtnPress = player2btnImage;
-
-    //         player2btnCaractere.setDisable(false);
-    //         player2btnImage.setDisable(true);
-
-    //         player2Caractere.setDisable(true);
-    //         player2CouleurPolice.setDisable(true);
-    //         player2Police.setDisable(true);
-    //         player2TaillePolice.setDisable(true);
-
-    //         player2Image.setDisable(false);
-    //     }
-    // }
-
-    // @FXML
-    // void firstTurn(ActionEvent event) {
-    //     Button source = (Button) event.getSource();
-    //     // TODO: source.getText()
-    //     if (source.equals(this.btnFirstTurnPlayer1)) {
-    //         this.btnFirstTurnPlayer1.setDisable(true);
-    //         this.btnFirstTurnPlayer2.setDisable(false);
-    //         this.btnFirstTurnRandom.setDisable(false);
-    //         this.setMonochrome(ImageFirstTurnAlea);
-    //         ImageFirstTurnJ1.setEffect(null);
-    //         this.setMonochrome(ImageFirstTurnJ2);
-    //     }
-    //     else if (source.equals(this.btnFirstTurnPlayer2)) {
-    //         this.btnFirstTurnPlayer1.setDisable(false);
-    //         this.btnFirstTurnPlayer2.setDisable(true);
-    //         this.btnFirstTurnRandom.setDisable(false);
-    //         this.setMonochrome(ImageFirstTurnAlea);
-    //         this.setMonochrome(ImageFirstTurnJ1);
-    //         ImageFirstTurnJ2.setEffect(null);
-    //     }
-    //     else {
-    //         this.btnFirstTurnPlayer1.setDisable(false);
-    //         this.btnFirstTurnPlayer2.setDisable(false);
-    //         this.btnFirstTurnRandom.setDisable(true);
-    //         ImageFirstTurnAlea.setEffect(null);
-    //         this.setMonochrome(ImageFirstTurnJ1);
-    //         this.setMonochrome(ImageFirstTurnJ2);
-    //     }
-    // }
-
-    // @FXML
-    // void nbPlayer(ActionEvent event) {
-    //     Button source = (Button)event.getSource();
-    //     if (source.equals(this.btnNbPlayer1)) {
-    //         this.btnNbPlayer1.setDisable(true);
-    //         this.btnNbPlayer2.setDisable(false);
-
-    //         // désactiver tout les paramètres de player2
-    //         player2Name.setDisable(true);
-    //         player2btnCaractere.setDisable(true);
-    //         player2Caractere.setDisable(true);
-    //         player2CouleurPolice.setDisable(true);
-    //         player2Police.setDisable(true);
-    //         player2TaillePolice.setDisable(true);
-    //         player2btnImage.setDisable(true);
-    //         player2Image.setDisable(true);
-
-    //         ImageNbPlayer1.setEffect(null);
-    //         this.setMonochrome(ImageNbPlayer21);
-    //         this.setMonochrome(ImageNbPlayer22);
-
-    //         this.setAiEnabled(true);
-    //     }
-    //     else {
-    //         this.btnNbPlayer1.setDisable(false);
-    //         this.btnNbPlayer2.setDisable(true);
-
-    //         // Activer les paramètes de player 2
-    //         player2Name.setDisable(false);
-    //         if (Player2btnImage.isDisable()) {
-    //            player2LastbtnPress = player2btnImage;
-    //         }
-    //         player2Personnalization(Player2LastbtnPress);
-
-    //         this.setMonochrome(ImageNbPlayer1);
-    //         ImageNbPlayer21.setEffect(null);
-    //         ImageNbPlayer22.setEffect(null);
-
-    //         this.setAiEnabled(false);
-    //     }
-    // }
-
-    // private void setAiEnabled(boolean b) {
-    //     if (b) {
-    //         this.nbPlayer == 2 = true;
-    //         if (IALastButtonPress.equals(this.btnIALevelNormal)) {
-    //             this.btnIALevelAdvanced.setDisable(false);
-    //             ImageIALevelNormal.setEffect(null);
-    //         }
-    //         else {
-    //             this.btnIALevelNormal.setDisable(false);
-    //             ImageIALevelAdvanced.setEffect(null);
-    //         }
-    //     }
-    //     else {
-    //         this.nbPlayer == 2 = false;
-    //         this.btnIALevelNormal.setDisable(false);
-    //         this.btnIALevelAdvanced.setDisable(false);
-    //         this.setMonochrome(ImageIALevelNormal);
-    //         this.setMonochrome(ImageIALevelAdvanced);
-    //     }
-    // }
+        this.player2Image.setDisable(carPerso);
+    }
 
     @FXML
     void play(ActionEvent event) {
-        MorpionController mc = new MorpionController();
-
         APlayer player1;
-        // // Joueur 1
-        // // caractere
-        // if (Player1btnCaractere.isDisable()) {
-        //     joueur1 = new Joueur(
-        //             player1Name.getText(),
-        //             player1Caractere.getText(),
-        //             player1Police.getValue(),
-        //             Integer.parseInt(Player1TaillePolice.getText()),
-        //             player1CouleurPolice.getValue()
-        //     );
-        //     mc.setJoueur1(joueur1);
-        // }
-        // // Image
-        // else {
-        //     joueur1 = new Joueur(
-        //             player1Name.getText(),
-        //             player1Image.getText()
-        //     );
-        //     mc.setJoueur1(joueur1);
-        // }
+        if (this.player1BtnCaractere.isDisable()) {
+            player1 = new PlayerText(
+                    this.player1Name.getText(),
+                    this.player1Caractere.getText(),
+                    this.player1Police.getValue(),
+                    Integer.parseInt(this.player1TaillePolice.getText()),
+                    this.player1CouleurPolice.getValue()
+            );
+        } else {
+            player1 = new PlayerImage(
+                    player1Name.getText(),
+                    player1Image.getText()
+            );
+        }
 
         APlayer player2;
-        // // Joueur 2
-        // // IA
-        // if (this.btnNbPlayer1.isDisable()) {
-        //     joueur2 = new Joueur(
-        //         "IA",
-        //         player1Caractere.getText().equals("O") ? "X" : "O",
-        //         "Calibri",
-        //         50,
-        //         Color.BLACK
-        //     );
-        //     mc.setJoueur2(joueur2);
-        // }
-        // else {
-        //     // caractere
-        //     if (Player2btnCaractere.isDisable()) {
-        //         joueur2 = new Joueur(
-        //             player2Name.getText(),
-        //             player2Caractere.getText(),
-        //             player2Police.getValue(),
-        //             Integer.parseInt(Player2TaillePolice.getText()),
-        //             player2CouleurPolice.getValue()
-        //         );
-        //         mc.setJoueur2(joueur2);
-        //     }
-        //     // Image
-        //     else {
-        //         joueur2 = new Joueur(
-        //             player2Name.getText(),
-        //             player2Image.getText()
-        //         );
-        //         mc.setJoueur2(joueur2);
-        //     }
-        // }
+        if (this.nbPlayer == 1) {
+            player2 = new PlayerText(
+                "IA",
+                this.player1Caractere.getText().equals("O") ? "X" : "O",
+                "Calibri",
+                50,
+                Color.BLACK
+            );
+        } else {
+            if (this.player2BtnCaractere.isDisable()) {
+                player2 = new PlayerText(
+                    this.player2Name.getText(),
+                    this.player2Caractere.getText(),
+                    this.player2Police.getValue(),
+                    Integer.parseInt(this.player2TaillePolice.getText()),
+                    this.player2CouleurPolice.getValue()
+                );
+            } else {
+                player2 = new PlayerImage(
+                    this.player2Name.getText(),
+                    this.player2Image.getText()
+                );
+            }
+        }
 
-        // mc.setJoueurActuel(getFirstTurn());
-        // mc.setPlayAlone(this.btnNbPlayer1.isDisable());
-        // if (this.btnNbPlayer1.isDisable()) { mc.setIALevelNormal(this.btnIALevelNormal.isDisable()); }
-
-        Morpion.launchMorpion(mc);
+        int firstTurn = this.getFirstTurn() == FirstTurn.J1 ? 1 : 2;
+        Morpion.launchMorpion(new MorpionController(player1, player2, firstTurn, this.nbPlayer, this.iaLevel));
     }
 
     private FirstTurn getFirstTurn() {
