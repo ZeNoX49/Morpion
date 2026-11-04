@@ -6,15 +6,15 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.stage.Stage;
 
-public class quitterController {
+public class QuitterController {
 
     @FXML
-    void Leave(ActionEvent event) {
-        Platform.exit(); // Ferme toute l'application
+    void leave(ActionEvent event) {
+        Platform.exit();
     }
 
     @FXML
-    void Stay(ActionEvent event) {
+    void stay(ActionEvent event) {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.close();
     }
