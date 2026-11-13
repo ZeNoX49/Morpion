@@ -99,10 +99,12 @@ public class ParametreController {
     private void updatePlayerNumber(int nbPlayer) {
         this.nbPlayer = nbPlayer;
         
-        if (nbPlayer == 1) {
-            this.btnNbPlayer1.setDisable(true);
-            this.btnNbPlayer2.setDisable(false);
+        boolean onePlayer = nbPlayer == 1;
 
+        this.btnNbPlayer1.setDisable(onePlayer);
+        this.btnNbPlayer2.setDisable(!onePlayer);
+
+        if (onePlayer) {
             // désactiver tout les paramètres de player2
             this.player2Name.setDisable(true);
             this.player2BtnCaractere.setDisable(true);
@@ -116,12 +118,7 @@ public class ParametreController {
             this.imageNbPlayer1.setEffect(null);
             this.setMonochrome(this.imageNbPlayer21);
             this.setMonochrome(this.imageNbPlayer22);
-
-            this.setAiEnabled(true);
         } else {
-            this.btnNbPlayer1.setDisable(false);
-            this.btnNbPlayer2.setDisable(true);
-
             // Activer les paramètes de player 2
             this.player2Name.setDisable(false);
             this.updatePlayer2Personnalization(this.lastPushDesignBtnPlayer2);
@@ -129,9 +126,9 @@ public class ParametreController {
             this.setMonochrome(this.imageNbPlayer1);
             this.imageNbPlayer21.setEffect(null);
             this.imageNbPlayer22.setEffect(null);
-
-            this.setAiEnabled(false);
         }
+
+        this.setAiEnabled(onePlayer);
     }
 
     private void setAiEnabled(boolean b) {
@@ -155,15 +152,16 @@ public class ParametreController {
         if (this.nbPlayer == 1) {
             this.iaLevel = iaLevel;
 
-            if (iaLevel.equals("normal")) {
-                this.btnIALevelNormal.setDisable(true);
+            boolean normalLevel = iaLevel.equals("normal");
+
+            this.btnIALevelNormal.setDisable(normalLevel);
+            this.btnIALevelAdvanced.setDisable(!normalLevel);
+
+            if (normalLevel) {
                 this.imageIALevelNormal.setEffect(null);
-                this.btnIALevelAdvanced.setDisable(false);
                 this.setMonochrome(this.imageIALevelAdvanced);
             } else {
-                this.btnIALevelNormal.setDisable(false);
                 this.setMonochrome(this.imageIALevelNormal);
-                this.btnIALevelAdvanced.setDisable(true);
                 this.imageIALevelAdvanced.setEffect(null);
             }
         }
@@ -172,27 +170,22 @@ public class ParametreController {
     private void updateFirstTurn(FirstTurn firstTurn) {
         this.firstPlayer = firstTurn;
 
+        this.btnFirstTurnPlayer1.setDisable(firstTurn == FirstTurn.J1);
+        this.btnFirstTurnPlayer2.setDisable(firstTurn == FirstTurn.J2);
+        this.btnFirstTurnRandom.setDisable(firstTurn == FirstTurn.ALEA);
+
         switch (firstTurn) {
             case J1 -> {
-                this.btnFirstTurnPlayer1.setDisable(true);
-                this.btnFirstTurnPlayer2.setDisable(false);
-                this.btnFirstTurnRandom.setDisable(false);
                 this.imageFirstTurnJ1.setEffect(null);
                 this.setMonochrome(this.imageFirstTurnJ2);
                 this.setMonochrome(this.imageFirstTurnAlea);
             }
             case J2 -> {
-                this.btnFirstTurnPlayer1.setDisable(false);
-                this.btnFirstTurnPlayer2.setDisable(true);
-                this.btnFirstTurnRandom.setDisable(false);
                 this.setMonochrome(this.imageFirstTurnJ1);
                 this.imageFirstTurnJ2.setEffect(null);
                 this.setMonochrome(this.imageFirstTurnAlea);
             }
             case ALEA -> {
-                this.btnFirstTurnPlayer1.setDisable(false);
-                this.btnFirstTurnPlayer2.setDisable(false);
-                this.btnFirstTurnRandom.setDisable(true);
                 this.setMonochrome(this.imageFirstTurnJ1);
                 this.setMonochrome(this.imageFirstTurnJ2);
                 this.imageFirstTurnAlea.setEffect(null);
